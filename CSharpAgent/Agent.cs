@@ -27,7 +27,7 @@ namespace CSharpAgent
             // send half rounded down of our ships from each planet we do own
             foreach (var planet in gs.Planets.Where(p => p.OwnerId == MyId))
             {
-                var ships = (int)Math.Floor(planet.NumberOfShips / 2.0);
+                var ships = (int)Math.Ceiling(planet.NumberOfShips / 2.0);
                 if (ships > 0)
                 {
                     SendFleet(planet.Id, targetPlanet.Id, ships);
