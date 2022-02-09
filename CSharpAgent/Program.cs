@@ -17,7 +17,7 @@ namespace CSharpAgent
 
             // Start Agent
             var agent = new Agent(name, endpoint);
-            agent.Start().Wait();            
+            agent.Start().Wait();
         }
     }
 }
