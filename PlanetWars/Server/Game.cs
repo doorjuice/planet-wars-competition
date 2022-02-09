@@ -1,12 +1,13 @@
-﻿using AutoMapper;
-using PlanetWars.Shared;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+
+using AutoMapper;
+
+using PlanetWars.Shared;
 using PlanetWars.DemoAgent;
 
 namespace PlanetWars.Server
@@ -29,8 +30,8 @@ namespace PlanetWars.Server
         private int _MAXPLANETID = 0;
         private int _MAXFLEETID = 0;
         //private int _NUM_PLANETS = 3;
-        public static readonly long START_DELAY = 10000; // 5 seconds
-        public static readonly long PLAYER_TURN_LENGTH = 700; // 200 ms
+        public static readonly long START_DELAY = 5000; // 5 seconds
+        public static readonly long PLAYER_TURN_LENGTH = 500; // 500 ms
         public static readonly long SERVER_TURN_LENGTH = 200; // 200 ms
         public static readonly int MAX_TURN = 200; // default 200 turns
 
