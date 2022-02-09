@@ -11,23 +11,23 @@ namespace CSharpAgent
     {
         public Agent(string name, string endpoint) : base(name, endpoint){}
 
-        public override void Update(StatusResult gs)
+        public override void Update(StatusResult gamestate)
         {
             // do cool ai stuff
-            Console.WriteLine($"[{DateTime.Now.ToShortTimeString()}]Current Turn: {gs.CurrentTurn}");
+            Console.WriteLine($"[{DateTime.Now.ToShortTimeString()}]Current Turn: {gamestate.CurrentTurn}");
             Console.WriteLine($"My ID: {MyId}");
-            Console.WriteLine($"Owned Planets: {string.Join(", ", gs.Planets.Where(p => p.OwnerId == MyId).Select(p =>  p.Id))}");
+            Console.WriteLine($"Owned Planets: {string.Join(", ", gamestate.Planets.Where(p => p.OwnerId == MyId).Select(p =>  p.Id))}");
 
             // find the first planet we don't own
-            var targetPlanet = gs.Planets.FirstOrDefault(p => p.OwnerId != MyId);
+            var targetPlanet = gamestate.Planets.FirstOrDefault(p => p.OwnerId != MyId);
             if (targetPlanet == null) return; // WE OWN IT ALLLLLLLLL
 
             Console.WriteLine($"Target Planet: {targetPlanet.Id}:{targetPlanet.NumberOfShips}");                       
 
             // send half rounded down of our ships from each planet we do own
-            foreach (var planet in gs.Planets.Where(p => p.OwnerId == MyId))
+            foreach (var planet in gamestate.Planets.Where(p => p.OwnerId == MyId))
             {
-                var ships = (int)Math.Ceiling(planet.NumberOfShips / 2.0);
+                var ships = (int)Math.Floor(planet.NumberOfShips / 2.0);
                 if (ships > 0)
                 {
                     SendFleet(planet.Id, targetPlanet.Id, ships);

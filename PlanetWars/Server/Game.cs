@@ -28,7 +28,7 @@ namespace PlanetWars.Server
         private int _MAXPLAYERID = 1;
         private int _MAXPLANETID = 0;
         private int _MAXFLEETID = 0;
-        private int _NUM_PLANETS = 3;
+        //private int _NUM_PLANETS = 3;
         public static readonly long START_DELAY = 10000; // 5 seconds
         public static readonly long PLAYER_TURN_LENGTH = 700; // 200 ms
         public static readonly long SERVER_TURN_LENGTH = 200; // 200 ms
@@ -153,6 +153,7 @@ namespace PlanetWars.Server
                 NumberOfShips = 20,
                 GrowthRate = 3
             });
+
             _planets.Add(new Planet()
             {
                 Id = _MAXPLANETID++,
