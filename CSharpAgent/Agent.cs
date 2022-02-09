@@ -13,7 +13,7 @@ namespace CSharpAgent
 
         public override void Update(StatusResult gamestate)
         {
-            // do cool ai stuff
+            // do cool ai stuff here!
             Console.WriteLine($"[{DateTime.Now.ToShortTimeString()}]Current Turn: {gamestate.CurrentTurn}");
             Console.WriteLine($"My ID: {MyId}");
             Console.WriteLine($"Owned Planets: {string.Join(", ", gamestate.Planets.Where(p => p.OwnerId == MyId).Select(p =>  p.Id))}");
