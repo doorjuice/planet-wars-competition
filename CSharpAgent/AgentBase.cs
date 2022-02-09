@@ -1,11 +1,11 @@
-﻿using PlanetWars.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
+
+using PlanetWars.Shared;
 
 namespace CSharpAgent
 {
@@ -46,6 +46,7 @@ namespace CSharpAgent
                 NumberOfShips = numShips
             };
             _pendingMoveRequests.Add(moveRequest);
+            Console.WriteLine($"> Move {numShips} ships from planet {sourcePlanetId} to planet {destinationPlanetId}");
         }
 
         protected async Task<LogonResult> Logon()
@@ -57,14 +58,16 @@ namespace CSharpAgent
             var result = await response.Content.ReadAsAsync<LogonResult>();
             if (!result.Success)
             {
-                Console.WriteLine($"Error talking to server {result.Message}");
-                throw new Exception("Could not talk to sever");
+                Console.WriteLine($"Error connecting to server: {result.Message}");
+                throw new Exception("Connection failed");
             }
             AuthToken = result.AuthToken;
             GameId = result.GameId;
             MyId = result.Id;
             TimeToNextTurn = (long)result.GameStart.Subtract(DateTime.UtcNow).TotalMilliseconds;
-            Console.WriteLine($"Your game Id is {result.GameId} auth {result.AuthToken} and starts in {TimeToNextTurn}ms");
+            Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] Connected to {_client.BaseAddress}");
+            Console.WriteLine($"Your game ID is {result.GameId} and your player ID is {MyId}");
+            Console.WriteLine($"Game starts in {TimeToNextTurn}ms");
             return result;
         }
 
@@ -77,12 +80,12 @@ namespace CSharpAgent
             var result = await response.Content.ReadAsAsync<StatusResult>();
             if (!result.Success)
             {
-                Console.WriteLine($"Error talking to server {result.Message}");
-                throw new Exception("Could not talk to sever");
+                Console.WriteLine($"Error connecting to server: {result.Message}");
+                throw new Exception("Connection lost");
             }
             TimeToNextTurn = (long)result.NextTurnStart.Subtract(DateTime.UtcNow).TotalMilliseconds;
             CurrentTurn = result.CurrentTurn;
-            Console.WriteLine($"Next turn in {TimeToNextTurn}ms");
+            Console.WriteLine($"Next turn in {TimeToNextTurn}ms\n");
             return result;
         }
 
@@ -92,8 +95,9 @@ namespace CSharpAgent
             var results = await response.Content.ReadAsAsync<List<MoveResult>>();
             foreach (var result in results)
             {
-                Console.WriteLine(result.Message);
-            }            
+                if (!result.Success)
+                    Console.WriteLine($"! {result.Message}");
+            }
             return results;
         }
 
@@ -105,6 +109,10 @@ namespace CSharpAgent
                 _isRunning = true;
                 while (_isRunning)
                 {
+                    if (TimeToNextTurn > 0)
+                    {
+                        await Task.Delay((int)(TimeToNextTurn));
+                    }
 
                     var gs = await UpdateGameState();
                     if (gs.IsGameOver)
@@ -119,10 +127,6 @@ namespace CSharpAgent
                     Update(gs);
                     var ur = await SendUpdate(this._pendingMoveRequests);
                     this._pendingMoveRequests.Clear();
-                    if (TimeToNextTurn > 0)
-                    {
-                        await Task.Delay((int)(TimeToNextTurn));
-                    }
                 }
             }
         }

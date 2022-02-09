@@ -54,7 +54,7 @@ namespace PlanetWars.Controllers
             }
             else
             {
-                return BaseResult<LogonResult>.Fail(errors:results.Errors.Select(e => e.ErrorMessage));
+                return BaseResult<LogonResult>.Fail(errors: results.Errors.Select(e => e.ErrorMessage));
             }
         }
 

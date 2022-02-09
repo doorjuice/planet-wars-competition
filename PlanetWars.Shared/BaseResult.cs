@@ -21,7 +21,7 @@ namespace PlanetWars.Shared
             };
         }
 
-        public static BaseResult<T> Fail(string message = "Failure", IEnumerable<string> errors = null)
+        public static BaseResult<T> Fail(string message = "Query failed", IEnumerable<string> errors = null)
         {
             return new BaseResult<T>()
             {
